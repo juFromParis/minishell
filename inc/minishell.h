@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:06:35 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/15 15:19:42 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:04:03 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,24 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-//void	ft_putnbr(int n);
+typedef enum e_token_type
+{
+    T_WORD,
+    T_PIPE,
+    T_REDIR_IN,
+    T_REDIR_OUT,
+    T_REDIR_APPEND,
+    T_HEREDOC,
+    T_SQUOTE,
+    T_DQUOTE,
+    T_END
+}   t_token_type;
+
+typedef struct s_token
+{
+    t_token_type   type;
+    char           *value;
+    struct s_token *next;
+}   t_token;
 
 #endif
