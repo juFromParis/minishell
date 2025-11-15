@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/15 10:09:21 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/15 15:11:48 by jderachi         ###   ########.fr       */
+/*   Created: 2025/11/15 15:06:35 by jderachi          #+#    #+#             */
+/*   Updated: 2025/11/15 15:19:42 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
-int	main(void)
-{
-	char	*input;
+# define PROMPT "\001\033[1;33m\002-minishell> \001\033[0m\002"
 
-	input = readline(PROMPT);
-	while (input != NULL)
-	{
-		if (*input)
-		{
-			add_history(input);
-		}
-		printf("Vous avez écrit: %s\n", input);
-		free(input);
-		input = readline(PROMPT);
-	}
-	return (0);
-}
+# include <stdio.h>
+# include <stdlib.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+
+//void	ft_putnbr(int n);
+
+#endif
