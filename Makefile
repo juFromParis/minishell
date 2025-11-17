@@ -6,7 +6,7 @@
 #    By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/15 12:20:00 by jderachi          #+#    #+#              #
-#    Updated: 2025/11/15 14:48:58 by jderachi         ###   ########.fr        #
+#    Updated: 2025/11/17 11:23:29 by jderachi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,11 @@ endif
 INCLUDES = -I./inc $(READLINE_INC)
 # Sources
 SRCS = \
-	src/main.c
+	src/main.c \
+	src/utils.c \
+	src/lexer/lexer.c \
+	src/lexer/token.c \
+	src/exit.c
 
 # Objects
 OBJS = $(SRCS:.c=.o)
