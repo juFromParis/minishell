@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:06:35 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/15 20:04:03 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/16 18:54:55 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ typedef enum e_token_type
     T_PIPE,
     T_REDIR_IN,
     T_REDIR_OUT,
-    T_REDIR_APPEND,
     T_HEREDOC,
+    T_APPEND,
     T_SQUOTE,
     T_DQUOTE,
     T_END
