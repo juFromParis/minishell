@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:06:35 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/17 11:21:23 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:57:14 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,28 @@ typedef struct s_token
 	struct		s_token	*next;
 }	t_token;
 
+typedef enum e_node_type
+{
+	N_START,
+	N_CMD,
+	N_WORD,
+	N_PIPE,
+	N_REDIR,
+	N_REDIR_IN,
+	N_REDIR_OUT,
+	N_HEREDOC,
+	N_APPEND,
+	N_END
+}	t_node_type;
+
+typedef struct  s_node
+{
+	t_node_type			type;
+	char				*value;
+	struct		s_node	*child;
+	struct		s_node	*sibling;
+}	t_node;
+
 // UTILS
 char	*ft_strdup(char *src);
 char	*ft_strndup(const char *s, size_t n);
@@ -56,8 +78,13 @@ t_token *new_token(t_token_type type, char *value);
 t_token *check_operator(char *str, int *i);
 t_token	*check_word(char *str, int *i);
 void	token_add_back(t_token **list, t_token *new);
+t_node	*parse(t_token *cur);
+t_node	*new_node(t_node_type type, char *value);
+void	lst_add_child(t_node *node, t_node *new);
+
+void	print_tree(t_node *root);
 
 // EXIT
-void	free_command(t_token **token);
+void	free_lexer(t_token **token);
 
 #endif

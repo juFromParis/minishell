@@ -6,7 +6,7 @@
 #    By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/15 12:20:00 by jderachi          #+#    #+#              #
-#    Updated: 2025/11/17 11:23:29 by jderachi         ###   ########.fr        #
+#    Updated: 2025/11/18 19:56:25 by jderachi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,8 +43,11 @@ INCLUDES = -I./inc $(READLINE_INC)
 SRCS = \
 	src/main.c \
 	src/utils.c \
-	src/lexer/lexer.c \
-	src/lexer/token.c \
+	src/parsing/lexer.c \
+	src/parsing/token.c \
+	src/parsing/parsing.c \
+	src/parsing/node.c \
+	src/tree.c \
 	src/exit.c
 
 # Objects

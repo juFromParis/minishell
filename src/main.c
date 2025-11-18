@@ -6,11 +6,43 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 10:09:21 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/17 12:47:53 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:56:57 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+static const char *node_type_name(t_node_type type)
+{
+	if (type == N_START)        return "START";
+	if (type == N_WORD)         return "WORD";
+	if (type == N_PIPE)         return "PIPE";
+	if (type == N_REDIR_IN)     return "REDIR_IN";
+	if (type == N_REDIR_OUT)    return "REDIR_OUT";
+	if (type == N_HEREDOC)      return "HEREDOC";
+	if (type == N_APPEND)       return "APPEND";
+	if (type == N_END)          return "END";
+	return "UNKNOWN";
+}
+
+void	print_parse(t_node *node)
+{
+	if (!node)
+		return ;
+
+	printf("Node type: %s", node_type_name(node->type));
+    if (node->value)
+        printf(" | value: \"%s\"", node->value);
+    printf("\n");
+
+    // afficher les enfants
+    if (node->child)
+        print_parse(node->child);
+
+    // afficher les siblings
+    if (node->sibling)
+        print_parse(node->sibling);
+}
 
 const	char	*token_type_to_str(t_token_type type)
 {
@@ -33,7 +65,7 @@ const	char	*token_type_to_str(t_token_type type)
 	}
 }
 
-void	print_command(t_token *token)
+void	print_lexer(t_token *token)
 {
 	t_token	*tmp;
 
@@ -47,9 +79,12 @@ void	print_command(t_token *token)
 
 int	main(void)
 {
-	t_token	*command;
+	t_token	*token;
+	t_node	*pipeline;
 	char	*input;
 
+	token = NULL;
+	pipeline = NULL;
 	input = readline(PROMPT);
 	while (input != NULL)
 	{
@@ -57,11 +92,15 @@ int	main(void)
 		{
 			add_history(input);
 		}
-		command = lexer(input);
+		token = lexer(input);
 		free(input);
-		print_command(command);
-		free_command(&command);
+		//print_lexer(token);
+		pipeline = parse(token);
+		print_tree(pipeline);
+		free_lexer(&token);
+		free(pipeline);
 		input = readline(PROMPT);
 	}
 	return (0);
+
 }

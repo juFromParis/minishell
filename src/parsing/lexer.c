@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 20:16:51 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/17 12:53:59 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:38:16 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ t_token	*check_word(char *str, int *i)
 	int		start;
 	int		len;
 	char	*word_str;
+	char	quote;
 
 	start = *i;
 	while (str[*i]
@@ -77,7 +78,19 @@ t_token	*check_word(char *str, int *i)
 		&& str[*i] != '&'
 		&& str[*i] != '('
 		&& str[*i] != ')')
-		(*i)++;
+	{
+		if (str[*i] == '"' || str[*i] == '\'')
+		{
+			quote = str[*i];
+			(*i)++;
+			while (str[*i] && str[*i] != quote)
+				(*i)++;
+			if (str[*i] == quote)
+				(*i)++;
+		}
+		else
+			(*i)++;
+	}
 	len = *i - start;
 	word_str = ft_strndup(str + start, len);
 	return (new_token(T_WORD, word_str));
