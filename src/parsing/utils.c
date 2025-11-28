@@ -6,30 +6,11 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 09:42:56 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/25 13:52:58 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/27 14:26:03 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
-int	ft_isoperator(char c)
-{
-	if (c == '|'
-		|| c == '<'
-		|| c == '>'
-		|| c == '&'
-		|| c == '('
-		|| c == ')')
-		return (1);
-	return (0);
-}
-
-int	ft_isspace(char c)
-{
-	if (c == ' ')
-		return (1);
-	return (0);
-}
 
 char	*ft_strdup(char *src)
 {
@@ -53,7 +34,6 @@ char	*ft_strdup(char *src)
 	return (dest);
 }
 
-
 char	*ft_strndup(const char *s, size_t n)
 {
 	size_t	len;
@@ -76,3 +56,18 @@ char	*ft_strndup(const char *s, size_t n)
 	dup[len] = '\0';
 	return (dup);
 }
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] && s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	return (0);
+}
+

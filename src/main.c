@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 10:09:21 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/25 13:58:51 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/28 09:40:44 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,10 @@ int	main(void)
 		if (*input)
 			add_history(input);
 		token = lexer(input);
-		free(input);
-		//print_lexer(token);
+		print_lexer(token);
 		pipeline = parse(token);
 		print_tree(pipeline);
-		free_lexer(&token);
+		is_parse_error(pipeline);
 		free_pipeline(&pipeline);
 		input = readline(PROMPT);
 	}

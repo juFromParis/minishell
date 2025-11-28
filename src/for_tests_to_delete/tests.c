@@ -6,23 +6,42 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 10:52:57 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/25 11:54:53 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/28 10:09:03 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h" 
+#include "../../inc/minishell.h"
+
+# define LEXER_COLOR     "\033[35m"
+# define AST_COLOR   "\033[36m"
+# define RESPONSE_COLOR   "\033[33m"
+# define RESET   "\033[0m"
 
 static const char *node_type_name(t_token_type type)
 {
 	if (type == START)        return "START";
 	if (type == SUB)          return "SUB";
+	if (type == OPE)          return "OPE";
+	if (type == PIPE)         return "PIPE";
+	if (type == AND)          return "AND";
+	if (type == OR)           return "OR";
     if (type == CMD)          return "CMD";
 	if (type == WORD)         return "WORD";
 	if (type == PIPE)         return "PIPE";
+    if (type == RDR)          return "RDR";
 	if (type == REDIR_IN)     return "REDIR_IN";
 	if (type == REDIR_OUT)    return "REDIR_OUT";
+    if (type == APPEND)      return "APPEND";
 	if (type == HEREDOC)      return "HEREDOC";
-	if (type == APPEND)       return "APPEND";
+	if (type == BUILTIN)       return "BUILTIN";
+    if (type == FCT)       return "FCT";
+    if (type == ECHO)       return "ECHO";
+    if (type == CD)       return "CD";
+    if (type == PWD)       return "PWD";
+    if (type == EXPORT)       return "EXPORT";
+    if (type == UNSET)       return "UNSET";
+    if (type == ENV)       return "ENV";
+    if (type == EXIT)       return "EXIT";
 	if (type == END)          return "END";
 	return "UNKNOWN";
 }
@@ -49,19 +68,30 @@ const	char	*token_type_to_str(t_token_type type)
 {
 	switch (type)
     {
-        case WORD: return "T_WORD";
-        case PIPE: return "T_PIPE";
-        case REDIR_IN: return "T_REDIR_IN";
-        case REDIR_OUT: return "T_REDIR_OUT";
-        case HEREDOC: return "T_HEREDOC";
-        case APPEND: return "T_APPEND";
-        case SQUOTE: return "T_SQUOTE";
-        case DQUOTE: return "T_DQUOTE";
-		case PARENT_OPEN: return "T_PARENT_OPEN";
-		case PARENT_CLOSE: return "T_PARENT_CLOSE";
-		case END: return "T_END";
-		case AND: return "T_AND";
-        case OR: return "T_OR";
+        case WORD: return "WORD";
+        case OPE: return "OPE";
+        case PIPE: return "PIPE";
+        case RDR: return "RDR";
+        case REDIR_IN: return "REDIR_IN";
+        case REDIR_OUT: return "REDIR_OUT";
+        case HEREDOC: return "HEREDOC";
+        case APPEND: return "APPEND";
+        case SQUOTE: return "SQUOTE";
+        case DQUOTE: return "DQUOTE";
+		case PARENT_OPEN: return "PARENT_OPEN";
+		case PARENT_CLOSE: return "PARENT_CLOSE";
+		case END: return "END";
+		case AND: return "AND";
+        case OR: return "OR";
+        case BUILTIN: return "BUILTIN";
+        case FCT: return "FCT";
+        case ECHO: return "ECHO";
+        case CD: return "CD";
+        case PWD: return "PWD";
+        case EXPORT: return "EXPORT";
+        case UNSET: return "UNSET";
+        case ENV: return "ENV";
+        case EXIT: return "EXIT";
         default: return "UNKNOWN";
 	}
 }
@@ -71,52 +101,55 @@ void	print_lexer(t_token *token)
 	t_token	*tmp;
 
 	tmp = token;
+    printf(LEXER_COLOR "\n/--LEXER------------------------------------------------------------------------------------------/\n\n" RESET);
 	while (tmp)
 	{
-		printf("[%s] [%s]\n", token_type_to_str(tmp->type), tmp->value);
+		printf(LEXER_COLOR "[ %s : %s ]" RESET, token_type_to_str(tmp->type), tmp->value);
 		tmp = tmp->next;
 	}
+	printf("\n");
 }
 
-static void	print_tree_rec(t_node *node, char *prefix, int last)
+static void print_tree_rec(t_node *node, char *prefix, int last)
 {
-	// Print prefix
-	printf("%s", prefix);
+    // Affiche le préfixe
+    printf(AST_COLOR "%s" RESET, prefix);
 
-	// Print branch
-	if (last)
-		printf(" -> ");
-	else
-		printf(" -> ");
+    // Affiche la branche
+    printf(AST_COLOR " -> " RESET);
 
-	// Print node itself
-	printf("[%s]", node_type_name(node->type));
-	if (node->value)
-		printf(" %s", node->value);
-	printf("\n");
+    // Affiche le noeud lui-même
+    printf(AST_COLOR "[%s]" RESET, node_type_name(node->type));
+    if (node->value)
+        printf(AST_COLOR "     %s" RESET, node->value);
 
-	// Prepare new prefix
-	char new_prefix[256];
-	snprintf(new_prefix, sizeof(new_prefix), "%s%s",
-		prefix, last ? "    " : "    ");
+    // Affiche previous pour tous les noeuds
+    printf(AST_COLOR "                 // node=%p // prev=%p // parent=%p" RESET, node, node->previous, node->parent);
 
-	// Count siblings to know which one is last
-	t_node *child = node->child;
-	while (child)
-	{
-		int is_last = (child->sibling == NULL);
-		print_tree_rec(child, new_prefix, is_last);
-		child = child->sibling;
-	}
+    printf("\n");
+
+    // Prépare le nouveau préfixe pour les enfants
+    char new_prefix[256];
+    snprintf(new_prefix, sizeof(new_prefix), "%s%s",
+             prefix, last ? "    " : "│   ");
+
+    // Parcourt tous les enfants
+    t_node *child = node->child;
+    while (child)
+    {
+        int is_last = (child->sibling == NULL);
+        print_tree_rec(child, new_prefix, is_last);
+        child = child->sibling;
+    }
 }
 
 void	print_tree(t_node *root)
 {
 	if (!root)
 		return;
-
+    printf(AST_COLOR "\n/--AST--------------------------------------------------------------------------------------------/\n\n" RESET);
 	// Print root without prefix
-	printf("%s\n", node_type_name(root->type));
+	printf(AST_COLOR "%s\n" RESET, node_type_name(root->type));
 
 	t_node *child = root->child;
 	while (child)
@@ -125,4 +158,5 @@ void	print_tree(t_node *root)
 		print_tree_rec(child, "", last);
 		child = child->sibling;
 	}
+    printf(RESPONSE_COLOR "\n/--REPONSE----------------------------------------------------------------------------------------/\n\n" RESET);
 }

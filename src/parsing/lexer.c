@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 20:16:51 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/25 12:28:06 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:48:14 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 t_token	*check_operator(char *str, int *i)
 {
 	if (str[*i] == '<' && str[*i + 1] == '<')
-		return ((*i) = (*i) + 2, new_token(HEREDOC, ft_strdup("<<")));
+		return ((*i) = (*i) + 2, new_token(RDR, ft_strdup("<<")));
 	else if (str[*i] == '<')
-		return ((*i)++, new_token(REDIR_IN, ft_strdup("<")));
+		return ((*i)++, new_token(RDR, ft_strdup("<")));
 	else if (str[*i] == '>' && str[*i + 1] == '>')
-		return ((*i) = (*i) + 2, new_token(APPEND, ft_strdup(">>")));
+		return ((*i) = (*i) + 2, new_token(RDR, ft_strdup(">>")));
 	else if (str[*i] == '>')
-		return ((*i)++, new_token(REDIR_OUT, ft_strdup(">")));
+		return ((*i)++, new_token(RDR, ft_strdup(">")));
 	else if (str[*i] == '&' && str[*i + 1] == '&')
-		return ((*i) = (*i) + 2, new_token(AND, ft_strdup("&&")));
+		return ((*i) = (*i) + 2, new_token(OPE, ft_strdup("&&")));
 	else if (str[*i] == '|' && str[*i + 1] == '|')
-		return ((*i) = (*i) + 2, new_token(OR, ft_strdup("||")));
+		return ((*i) = (*i) + 2, new_token(OPE, ft_strdup("||")));
 	else if (str[*i] == '|')
-		return ((*i)++, new_token(PIPE, ft_strdup("|")));
+		return ((*i)++, new_token(OPE, ft_strdup("|")));
 	else if (str[*i] == '(')
 		return ((*i)++, new_token(PARENT_OPEN, ft_strdup("(")));
 	else if (str[*i] == ')')
@@ -45,7 +45,7 @@ t_token	*check_word(char *str, int *i)
 	start = *i;
 	while (str[*i]
 		&& !ft_isspace(str[*i])
-		&& !ft_isoperator(str[*i]))
+		&& !ft_issign(str[*i]))
 	{
 		if (str[*i] == '"' || str[*i] == '\'')
 		{
@@ -61,7 +61,27 @@ t_token	*check_word(char *str, int *i)
 	}
 	len = *i - start;
 	word_str = ft_strndup(str + start, len);
-	return (new_token(WORD, word_str));
+	return (new_token(lex_builtin(word_str), word_str));
+}
+
+t_token_type	lex_builtin(char *value)
+{
+	if (ft_strcmp(value, "echo") == 0)
+		return (ECHO);
+	else if (ft_strcmp(value, "cd") == 0)
+		return (CD);
+	else if (ft_strcmp(value, "pwd") == 0)
+		return (PWD);
+	else if (ft_strcmp(value, "export") == 0)
+		return (EXPORT);
+	else if (ft_strcmp(value, "unset") == 0)
+		return (UNSET);
+	else if (ft_strcmp(value, "env") == 0)
+		return (ENV);
+	else if (ft_strcmp(value, "exit") == 0)
+		return (EXIT);
+	else
+		return (WORD);
 }
 
 t_token	*lexer(char *str)
@@ -76,7 +96,7 @@ t_token	*lexer(char *str)
 	{
 		while (ft_isspace(str[i]))
 			i++;
-		if (ft_isoperator(str[i]))
+		if (ft_issign(str[i]))
 		{
 			token = check_operator(str, &i);
 			token_push(&token_list, token, &i);
@@ -88,5 +108,6 @@ t_token	*lexer(char *str)
 		}
 	}
 	token_add_back(&token_list, new_token(END, NULL));
+	free(str);
 	return (token_list);
 }

@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/25 13:46:08 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/11/27 09:45:47 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ t_node	*new_node(t_token_type type, char *value)
 	if (!node)
 		return (NULL);
 	node->type = type;
+	node->parent = NULL;
+	node->previous = NULL;
 	node->child = NULL;
 	node->sibling = NULL;
 	if (value)
@@ -35,17 +37,21 @@ void	lst_add_child(t_node *node, t_node *new)
 
 	if (!node || !new)
 		return ;
-
 	if (node->child == NULL)
 	{
+		new->parent = node;
+		new->previous = NULL;
 		node->child = new;
 		return ;
 	}
 	last = node->child;
 	while (last->sibling)
 		last = last->sibling;
+	new->parent = node;
+	new->previous = last;
 	last->sibling = new;
 }
+
 
 void	lst_add_sibling(t_node *node, t_node *new)
 {
@@ -57,6 +63,8 @@ void	lst_add_sibling(t_node *node, t_node *new)
 	last = node;
 	while (last->sibling)
 		last = last->sibling;
+	new->parent = node;
+	new->previous = last;
 	last->sibling = new;
 }
 

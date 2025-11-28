@@ -6,7 +6,7 @@
 #    By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/15 12:20:00 by jderachi          #+#    #+#              #
-#    Updated: 2025/11/25 11:53:34 by jderachi         ###   ########.fr        #
+#    Updated: 2025/11/28 14:05:41 by jderachi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 GREEN  = \033[32m
 RED    = \033[31m
 YELLOW = \033[33m
+CYAN = \033[36m
 RESET  = \033[0m
 
 RM = rm -f
@@ -39,42 +40,66 @@ endif
 
 # Includes
 INCLUDES = -I./inc $(READLINE_INC)
+
 # Sources
 SRCS = \
 	src/main.c \
 	src/parsing/utils.c \
+	src/parsing/ischeck.c \
 	src/parsing/lexer.c \
 	src/parsing/token.c \
 	src/parsing/parsing.c \
 	src/parsing/node.c \
+	src/parse_error/parse_error.c \
+	src/parse_error/error_ope.c \
+	src/parse_error/error_redir.c \
 	src/for_tests_to_delete/tests.c \
 	src/exit.c
 
 # Objects
 OBJS = $(SRCS:.c=.o)
 
+# Valgrind suppression file
+SUPP = readline.supp
+
+# Valgrind command
+VAL = valgrind --leak-check=full --show-leak-kinds=all \
+			   --track-origins=yes --suppressions=$(SUPP)
+
 # Rules
-all: $(MLX_LIB) $(NAME)
+all: $(NAME)
 
 # Compile minishell
 $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) $(READLINE_LIB) -o $(NAME)
-	@echo "$(GREEN)✓ $(NAME) compilé avec succès !$(RESET)"
-	@echo "$(GREEN)✓ $(NAME) start..$(RESET)"
+	@echo "$(CYAN)  __  __ _       _   _____ _          _ _ "
+	@echo "$(CYAN) |  \/  (_)     (_) / ____| |        | | |"
+	@echo "$(CYAN) | \  / |_ _ __  _ | (___ | |__   ___| | |"
+	@echo "$(CYAN) | |\/| | | '_ \| | \___ \| '_ \ / _ \ | |"
+	@echo "$(CYAN) | |  | | | | | | |_____) | | | |  __/ | |"
+	@echo "$(CYAN) |_|  |_|_|_| |_|_|______/|_| |_|\___|_|_|"
+	@echo "$(RESET)"
+	@echo "$(GREEN)✓ $(NAME) compiled successfully!$(RESET)"
+	@echo "$(GREEN)✓ $(NAME) ready to start..$(RESET)"
 
 # Compile each .c file into a .o file
 %.o: %.c
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+# Valgrind rule
+valgrind: $(NAME)
+	@echo "$(YELLOW)→ Running Valgrind (with Readline suppressions)…$(RESET)"
+	@$(VAL) ./$(NAME)
+
 # Cleans
 clean:
 	@$(RM) $(OBJS)
-	@echo "$(YELLOW)✓ Fichiers objets supprimés !$(RESET)"
+	@echo "$(YELLOW)✓ Object files removed! !$(RESET)"
 
 fclean: clean
 	@$(RM) $(NAME)
-	@echo "$(YELLOW)✓ $(NAME) nettoyés !$(RESET)"
+	@echo "$(YELLOW)✓ $(NAME) cleaned!$(RESET)"
 
 re: fclean all
 
-.PHONY: all clean fclean re asan
+.PHONY: all clean fclean re valgrind

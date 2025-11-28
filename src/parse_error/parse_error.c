@@ -1,47 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   parse_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/17 09:18:01 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/25 14:21:50 by jderachi         ###   ########.fr       */
+/*   Created: 2025/11/26 09:46:29 by jderachi          #+#    #+#             */
+/*   Updated: 2025/11/28 13:38:11 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h" 
 
-void	free_lexer(t_token **list)
+int	is_error_type(t_node *node)
 {
-	t_token	*tmp;
-	t_token	*current;
-
-	current = *list;
-	while (current != NULL)
-	{
-		tmp = current;
-		current = current->next;
-		if (tmp->value)
-			free(tmp->value);
-		free(tmp);
-	}
-	*list = NULL;
+	if (node->type == OPE)
+		if (is_error_ope(node))
+			return (1);
+	if (node->type == RDR)
+		if (is_error_redir(node))
+			return (1);
+	return (0);
 }
 
-void	free_pipeline(t_node **list)
+int	is_parse_error(t_node *list)
 {
 	t_node	*node;
 
-	if (!list || !*list)
-		return ;
-	node = *list;
-	if (node->child)
-		free_pipeline(&node->child);
-	if (node->sibling)
-		free_pipeline(&node->sibling);
+	if (!list)
+		return (0);
+	node = list;
 	if (node->value)
-		free(node->value);
-	free(node);
-	*list = NULL;
+		if (is_error_type(node))
+			return (1);
+	if (node->child)
+		if (is_parse_error(node->child))
+			return (1);
+	if (node->sibling)
+		if (is_parse_error(node->sibling))
+			return (1);
+	return (0);
 }
+
