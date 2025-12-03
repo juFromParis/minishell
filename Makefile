@@ -6,7 +6,7 @@
 #    By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/15 12:20:00 by jderachi          #+#    #+#              #
-#    Updated: 2025/11/28 14:05:41 by jderachi         ###   ########.fr        #
+#    Updated: 2025/12/03 10:05:30 by jderachi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,9 +50,10 @@ SRCS = \
 	src/parsing/token.c \
 	src/parsing/parsing.c \
 	src/parsing/node.c \
-	src/parse_error/parse_error.c \
-	src/parse_error/error_ope.c \
-	src/parse_error/error_redir.c \
+	src/syntax_error/syntax_error.c \
+	src/syntax_error/syntax_ope.c \
+	src/syntax_error/syntax_redir.c \
+	src/syntax_error/syntax_sub.c \
 	src/for_tests_to_delete/tests.c \
 	src/exit.c
 

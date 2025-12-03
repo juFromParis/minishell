@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 10:52:57 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/28 10:09:03 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 12:13:15 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static const char *node_type_name(t_token_type type)
 {
 	if (type == START)        return "START";
 	if (type == SUB)          return "SUB";
+    if (type == PARENT_OPEN)          return "PARENT_OPEN";
+    if (type == PARENT_CLOSE)          return "PARENT_CLOSE";
 	if (type == OPE)          return "OPE";
 	if (type == PIPE)         return "PIPE";
 	if (type == AND)          return "AND";
@@ -112,6 +114,9 @@ void	print_lexer(t_token *token)
 
 static void print_tree_rec(t_node *node, char *prefix, int last)
 {
+    if (!node)
+        return;
+
     // Affiche le préfixe
     printf(AST_COLOR "%s" RESET, prefix);
 
@@ -120,11 +125,11 @@ static void print_tree_rec(t_node *node, char *prefix, int last)
 
     // Affiche le noeud lui-même
     printf(AST_COLOR "[%s]" RESET, node_type_name(node->type));
-    if (node->value)
+    if (node->value)  // Si le nœud a une valeur (ce sera le cas pour les opérateurs)
         printf(AST_COLOR "     %s" RESET, node->value);
 
     // Affiche previous pour tous les noeuds
-    printf(AST_COLOR "                 // node=%p // prev=%p // parent=%p" RESET, node, node->previous, node->parent);
+    printf(AST_COLOR " // node=%p // prev=%p // parent=%p" RESET, node, node->previous, node->parent);
 
     printf("\n");
 
@@ -138,25 +143,90 @@ static void print_tree_rec(t_node *node, char *prefix, int last)
     while (child)
     {
         int is_last = (child->sibling == NULL);
-        print_tree_rec(child, new_prefix, is_last);
+        print_tree_rec(child, new_prefix, is_last);  // Appel récursif pour afficher l'enfant
         child = child->sibling;
     }
 }
 
-void	print_tree(t_node *root)
+void print_tree(t_node *root)
 {
-	if (!root)
-		return;
-    printf(AST_COLOR "\n/--AST--------------------------------------------------------------------------------------------/\n\n" RESET);
-	// Print root without prefix
-	printf(AST_COLOR "%s\n" RESET, node_type_name(root->type));
+    if (!root)
+        return;
 
-	t_node *child = root->child;
-	while (child)
-	{
-		int last = (child->sibling == NULL);
-		print_tree_rec(child, "", last);
-		child = child->sibling;
-	}
+    printf(AST_COLOR "\n/--AST--------------------------------------------------------------------------------------------/\n\n" RESET);
+
+    // Affiche la racine sans préfixe
+    printf(AST_COLOR "[%s]" RESET, node_type_name(root->type));
+
+    printf(AST_COLOR "%s\n" RESET, root->value);
+
+    t_node *child = root->child;
+    while (child)
+    {
+        int last = (child->sibling == NULL);
+        print_tree_rec(child, "", last);  // Affiche récursivement les enfants
+        child = child->sibling;
+    }
+
     printf(RESPONSE_COLOR "\n/--REPONSE----------------------------------------------------------------------------------------/\n\n" RESET);
+}
+
+void print_node_debug(t_node *node, int depth)
+{
+    if (!node)
+        return;
+
+    // indentation
+    for (int i = 0; i < depth; i++)
+        printf("    ");
+
+    // Node info
+    printf("[%s", node_type_name(node->type));
+    if (node->value)
+        printf(" \"%s\"", node->value);
+    printf("]\n");
+
+    // Relations
+    for (int i = 0; i < depth; i++)
+        printf("    ");
+    printf("    ├── parent  → %p\n", node->parent);
+
+    for (int i = 0; i < depth; i++)
+        printf("    ");
+    printf("    ├── previous→ %p\n", node->previous);
+
+    for (int i = 0; i < depth; i++)
+        printf("    ");
+    printf("    ├── child   → %p", node->child);
+    if (node->child)
+    {
+        printf("  (%s", node_type_name(node->child->type));
+        if (node->child->value)
+            printf(" \"%s\"", node->child->value);
+        printf(")");
+    }
+    printf("\n");
+
+    for (int i = 0; i < depth; i++)
+        printf("    ");
+    printf("    └── sibling → %p", node->sibling);
+    if (node->sibling)
+    {
+        printf("  (%s", node_type_name(node->sibling->type));
+        if (node->sibling->value)
+            printf(" \"%s\"", node->sibling->value);
+        printf(")");
+    }
+    printf("\n\n");
+
+    // Recursion
+    print_node_debug(node->child, depth + 1);
+    print_node_debug(node->sibling, depth);
+}
+
+void print_tree_debug(t_node *root)
+{
+    printf("\n====== DEBUG AST (child/sibling view) ======\n\n");
+    print_node_debug(root, 0);
+    printf("===========================================\n");
 }

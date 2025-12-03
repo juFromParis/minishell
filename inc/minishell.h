@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:06:35 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/28 13:38:41 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 11:22:29 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
+	struct s_token		*prev;
 	struct s_token		*next;
 }	t_token;
 
@@ -102,12 +103,14 @@ t_node	*parse_left(t_token **cur);
 t_node	*new_node(t_token_type type, char *value);
 
 
-// PARSE ERROR
-int		is_parse_error(t_node *list);
+// SYNTAX ERROR
+int		is_syntax_error(t_node *list);
 int		is_error_ope(t_node *node);
 int		is_error_redir(t_node *node);
+int		is_error_sub(t_node *node);
 
 void	print_tree(t_node *root);
+void	print_tree_debug(t_node *root);
 void	print_lexer(t_token *token);
 
 // EXIT

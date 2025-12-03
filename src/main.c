@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 10:09:21 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/28 09:40:44 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 11:55:13 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ int	main(void)
 		print_lexer(token);
 		pipeline = parse(token);
 		print_tree(pipeline);
-		is_parse_error(pipeline);
+		//print_tree_debug(pipeline);
+		//is_syntax_error(pipeline);
 		free_pipeline(&pipeline);
 		input = readline(PROMPT);
 	}

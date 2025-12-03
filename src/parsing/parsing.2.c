@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 09:34:21 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/03 12:33:35 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 11:53:29 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,9 @@
 int get_operator_priority(int operator_type)
 {
     if (operator_type == PIPE)
-        return 1;  // Priorité la plus haute pour |
-    else if (operator_type == AND)
-        return 2;  // Priorité plus élevée pour &&
-    else if (operator_type == OR)
-        return 3;  // Priorité plus faible pour ||
+        return 1;  // Priorité la plus basse pour |
+    else if (operator_type == AND || operator_type == OR)
+        return 2;  // Priorité plus haute pour && et ||
     return 0;  // Aucun opérateur
 }
 
@@ -74,47 +72,47 @@ static t_node *parse_operator(t_token **cur)
 
     if (*cur && ft_isoperator((*cur)->type))
     {
-        node = new_node(OPE, (*cur)->value);  // Créer un nœud pour l'opérateur
-        *cur = (*cur)->next;  // Passer au token suivant
+        node = new_node(OPE, (*cur)->value); // Créer un nœud pour l'opérateur
+        *cur = (*cur)->next; // Passer au token suivant
         return node;
     }
     return NULL;
 }
 
+// Fonction pour analyser un pipeline avec gestion des priorités des opérateurs
 t_node *parse_pipeline(t_token **cur, int min_priority)
 {
     t_node *left;
     t_node *operator;
     t_node *right;
 
-    // Analyser la première commande à gauche
+    // Analyse de la commande à gauche (première commande)
     left = parse_left(cur);
     if (!left)
         return NULL;
 
-    // Analyser les opérateurs en tenant compte de leur priorité
+    // Analyse des opérateurs en tenant compte de leur priorité
     operator = parse_operator(cur);
     while (operator && get_operator_priority(operator->type) >= min_priority)
     {
-        // Analyser la commande à droite de l'opérateur
+        // Analyse de la commande à droite de l'opérateur
         right = parse_left(cur);
         if (!right)
             return NULL;
 
-        // Lier l'opérateur avec ses deux commandes
-        lst_add_child(operator, left);  // Ajouter la commande gauche
-        lst_add_child(operator, right); // Ajouter la commande droite
+        // Créer une relation entre l'opérateur et les deux commandes
+        lst_add_child(operator, left);  // Ajouter la commande gauche à l'opérateur
+        lst_add_child(operator, right); // Ajouter la commande droite à l'opérateur
 
-        // Mettre à jour `left` pour l'itération suivante
+        // Mettre à jour left pour l'itération suivante
         left = operator;
 
         // Passer à l'opérateur suivant
         operator = parse_operator(cur);
     }
 
-    return left;  // Retourner le nœud de gauche qui devient un opérateur ou une commande
+    return left;  // Retourner le nœud de gauche (qui devient un opérateur ou une commande)
 }
-
 
 // Fonction pour analyser toute l'expression avec gestion des priorités des opérateurs
 t_node *parse(t_token *cur)
@@ -125,7 +123,7 @@ t_node *parse(t_token *cur)
         return NULL;
 
     // Analyser avec la priorité minimale (0 ici)
-    pipeline = parse_pipeline(&cur, 0);  // Analyser avec la priorité la plus faible
+    pipeline = parse_pipeline(&cur, 0); 
 
     // Retourner l'AST généré
     return pipeline;
