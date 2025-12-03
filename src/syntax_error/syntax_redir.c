@@ -1,14 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_redir.c                                      :+:      :+:    :+:   */
+/*   syntax_redir.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 10:12:55 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/28 13:28:04 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:08:37 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
 
 #include "../../inc/minishell.h" 
 
@@ -36,3 +38,5 @@ int	is_error_redir(t_node *node)
 		return (printf("bash: "SYNTAX_ERROR" `%s'\n", node->sibling->value), 1);
 	return (0);
 }
+
+*/

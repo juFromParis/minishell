@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 09:18:01 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/25 14:21:50 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 17:22:04 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,13 @@ void	free_lexer(t_token **list)
 	*list = NULL;
 }
 
-void	free_pipeline(t_node **list)
+void	free_ast(t_node *node)
 {
-	t_node	*node;
-
-	if (!list || !*list)
+	if (!node)
 		return ;
-	node = *list;
-	if (node->child)
-		free_pipeline(&node->child);
-	if (node->sibling)
-		free_pipeline(&node->sibling);
+	free_ast(node->left);
+	free_ast(node->right);
 	if (node->value)
 		free(node->value);
 	free(node);
-	*list = NULL;
 }

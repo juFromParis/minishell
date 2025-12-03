@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 11:59:06 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/28 13:43:01 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:55:10 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_issign(char c)
 
 int	ft_isoperator(t_token_type type)
 {
-	if (type == OPE || type == PIPE || type == AND || type == OR)
+	if (type == T_PIPE || type == T_AND || type == T_OR)
 		return (1);
 	return (0);
 }
@@ -43,19 +43,21 @@ int	ft_isredir(char *str)
 	return (0);
 }
 
+/*
 int	ft_isbuiltin(t_token_type type)
 {
-	if (type == FCT
-		|| type == ECHO
-		|| type == CD
-		|| type == PWD
-		|| type == EXPORT
-		|| type == UNSET
-		|| type == ENV
-		|| type == EXIT)
+	if (type == T_FCT
+		|| type == T_ECHO
+		|| type == T_CD
+		|| type == T_PWD
+		|| type == T_EXPORT
+		|| type == T_UNSET
+		|| type == T_ENV
+		|| type == T_EXIT)
 		return (1);
 	return (0);
 }
+*/
 
 int	ft_isspace(char c)
 {

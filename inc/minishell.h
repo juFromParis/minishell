@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 15:06:35 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/03 11:22:29 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:53:56 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,34 +25,31 @@
 
 typedef enum e_token_type
 {
-	START,
-	SUB,
-	CMD,
-	OPE,
-	WORD,
-	PIPE,
-	RDR,
-	FCT,
-	REDIR_IN,
-	REDIR_OUT,
-	HEREDOC,
-	APPEND,
-	SQUOTE,
-	DQUOTE,
-	PARENT_OPEN,
-	PARENT_CLOSE,
-	AND,
-	OR,
-	BUILTIN,
-	ECHO,
-	CD,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT,
-	END
+	T_WORD,
+	T_PIPE,
+	T_REDIR_IN,
+	T_REDIR_OUT,
+	T_HEREDOC,
+	T_APPEND,
+	T_PARENT_OPEN,
+	T_PARENT_CLOSE,
+	T_AND,
+	T_OR,
+	T_END
 }	t_token_type;
+
+typedef enum e_node_type
+{
+	N_CMD,
+	N_PIPE,
+	N_REDIR_IN,
+	N_REDIR_OUT,
+	N_HEREDOC,
+	N_APPEND,
+	N_AND,
+	N_OR,
+	N_SUB
+}	t_node_type;
 
 typedef struct s_token
 {
@@ -64,13 +61,12 @@ typedef struct s_token
 
 typedef struct s_node
 {
-	t_token_type		type;
-	char				*value;
+	t_node_type			type;
+	char				**cmd;
 	char				*file;
 	struct s_node		*parent;
-	struct s_node		*previous;
-	struct s_node		*child;
-	struct s_node		*sibling;
+	struct s_node		*left;
+	struct s_node		*right;
 }	t_node;
 
 // UTILS
@@ -95,12 +91,15 @@ t_token_type	lex_builtin(char *value);
 void	token_add_back(t_token **list, t_token *new);
 void	token_push(t_token **list, t_token *token, int *i);
 void	redir_node(t_node *cmd, t_token *cur);
-void	parse_cmd(t_node *cmd, t_token **cur);
-void	lst_add_child(t_node *node, t_node *new);
 
+// AST
 t_node	*parse(t_token *cur);
+t_node	*parse_or(t_token **cur);
+t_node	*parse_and(t_token **cur);
+t_node	*parse_pipe(t_token **cur);
+t_node	*parse_cmd(t_token **cur);
 t_node	*parse_left(t_token **cur);
-t_node	*new_node(t_token_type type, char *value);
+t_node	*new_node(t_node_type type, t_node *left, t_node *right, char *value);
 
 
 // SYNTAX ERROR
@@ -115,6 +114,6 @@ void	print_lexer(t_token *token);
 
 // EXIT
 void	free_lexer(t_token **token);
-void	free_pipeline(t_node **list);
+void	free_ast(t_node *node);
 
 #endif

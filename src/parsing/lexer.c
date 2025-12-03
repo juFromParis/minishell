@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 20:16:51 by jderachi          #+#    #+#             */
-/*   Updated: 2025/11/28 13:48:14 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:57:16 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,23 @@
 t_token	*check_operator(char *str, int *i)
 {
 	if (str[*i] == '<' && str[*i + 1] == '<')
-		return ((*i) = (*i) + 2, new_token(RDR, ft_strdup("<<")));
+		return ((*i) = (*i) + 2, new_token(T_HEREDOC, ft_strdup("<<")));
 	else if (str[*i] == '<')
-		return ((*i)++, new_token(RDR, ft_strdup("<")));
+		return ((*i)++, new_token(T_REDIR_IN, ft_strdup("<")));
 	else if (str[*i] == '>' && str[*i + 1] == '>')
-		return ((*i) = (*i) + 2, new_token(RDR, ft_strdup(">>")));
+		return ((*i) = (*i) + 2, new_token(T_APPEND, ft_strdup(">>")));
 	else if (str[*i] == '>')
-		return ((*i)++, new_token(RDR, ft_strdup(">")));
+		return ((*i)++, new_token(T_REDIR_OUT, ft_strdup(">")));
 	else if (str[*i] == '&' && str[*i + 1] == '&')
-		return ((*i) = (*i) + 2, new_token(OPE, ft_strdup("&&")));
+		return ((*i) = (*i) + 2, new_token(T_AND, ft_strdup("&&")));
 	else if (str[*i] == '|' && str[*i + 1] == '|')
-		return ((*i) = (*i) + 2, new_token(OPE, ft_strdup("||")));
+		return ((*i) = (*i) + 2, new_token(T_OR, ft_strdup("||")));
 	else if (str[*i] == '|')
-		return ((*i)++, new_token(OPE, ft_strdup("|")));
+		return ((*i)++, new_token(T_PIPE, ft_strdup("|")));
 	else if (str[*i] == '(')
-		return ((*i)++, new_token(PARENT_OPEN, ft_strdup("(")));
+		return ((*i)++, new_token(T_PARENT_OPEN, ft_strdup("(")));
 	else if (str[*i] == ')')
-		return ((*i)++, new_token(PARENT_CLOSE, ft_strdup(")")));
+		return ((*i)++, new_token(T_PARENT_CLOSE, ft_strdup(")")));
 	return (NULL);
 }
 
@@ -61,28 +61,30 @@ t_token	*check_word(char *str, int *i)
 	}
 	len = *i - start;
 	word_str = ft_strndup(str + start, len);
-	return (new_token(lex_builtin(word_str), word_str));
+	return (new_token(T_WORD, word_str));
 }
 
+/*
 t_token_type	lex_builtin(char *value)
 {
 	if (ft_strcmp(value, "echo") == 0)
-		return (ECHO);
+		return (T_ECHO);
 	else if (ft_strcmp(value, "cd") == 0)
-		return (CD);
+		return (T_CD);
 	else if (ft_strcmp(value, "pwd") == 0)
-		return (PWD);
+		return (T_PWD);
 	else if (ft_strcmp(value, "export") == 0)
-		return (EXPORT);
+		return (T_EXPORT);
 	else if (ft_strcmp(value, "unset") == 0)
-		return (UNSET);
+		return (T_UNSET);
 	else if (ft_strcmp(value, "env") == 0)
-		return (ENV);
+		return (T_ENV);
 	else if (ft_strcmp(value, "exit") == 0)
-		return (EXIT);
+		return (T_EXIT);
 	else
-		return (WORD);
+		return (T_WORD);
 }
+*/
 
 t_token	*lexer(char *str)
 {
@@ -107,7 +109,7 @@ t_token	*lexer(char *str)
 			token_push(&token_list, token, &i);
 		}
 	}
-	token_add_back(&token_list, new_token(END, NULL));
+	token_add_back(&token_list, new_token(T_END, NULL));
 	free(str);
 	return (token_list);
 }

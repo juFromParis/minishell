@@ -6,12 +6,13 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 13:30:37 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/03 09:58:52 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:08:14 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h" 
 
+/*
 int	is_error_ope(t_node *node)
 {
 	if (!node)
@@ -30,3 +31,4 @@ int	is_error_ope(t_node *node)
 	}
 	return (0);
 }
+*/

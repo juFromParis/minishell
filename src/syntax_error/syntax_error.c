@@ -6,12 +6,13 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 09:46:29 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/03 10:13:10 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:07:48 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h" 
 
+/*
 int	is_error_type(t_node *node)
 {
 	if (node->type == OPE)
@@ -45,3 +46,4 @@ int	is_syntax_error(t_node *list)
 	return (0);
 }
 
+*/

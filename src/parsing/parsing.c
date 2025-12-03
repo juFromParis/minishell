@@ -6,127 +6,181 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 09:34:21 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/03 12:33:35 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/03 20:09:18 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-// Retourne la priorité de chaque opérateur
-int get_operator_priority(int operator_type)
+t_node	*parse_or(t_token **cur)
 {
-    if (operator_type == PIPE)
-        return 1;  // Priorité la plus haute pour |
-    else if (operator_type == AND)
-        return 2;  // Priorité plus élevée pour &&
-    else if (operator_type == OR)
-        return 3;  // Priorité plus faible pour ||
-    return 0;  // Aucun opérateur
+	t_node	*left;
+	t_node	*right;
+	t_node	*node;
+
+	left = parse_and(cur);
+	if (!left)
+		return (NULL);
+	while (*cur && (*cur)->type == T_OR)
+	{
+		*cur = (*cur)->next;
+		right = parse_and(cur);
+		if (!right)
+			return (free_ast(left), NULL);
+		node = new_node(N_OR, left, right, NULL);
+		if (!node)
+			return (free_ast(left), free_ast(right), NULL);
+		left = node;
+	}
+	return (left);
 }
 
-// Fonction pour analyser une commande (CMD)
-void parse_cmd(t_node *cmd, t_token **cur)
+t_node	*parse_and(t_token **cur)
 {
-    t_node *node;
+	t_node	*left;
+	t_node	*right;
+	t_node	*node;
 
-    // Analyser les tokens jusqu'à ce qu'on rencontre un opérateur
-    while (*cur && !ft_isoperator((*cur)->type))  // Tant qu'on ne rencontre pas un opérateur
-    {
-        if ((*cur)->type == WORD)  // Si c'est un mot (argument ou commande)
-        {
-            node = new_node(WORD, (*cur)->value);  // Créer un nœud pour ce mot
-            *cur = (*cur)->next;  // Passer au token suivant
-            lst_add_child(cmd, node);  // Ajouter le mot comme enfant de la commande
-        }
-        else if (ft_isredir((*cur)->value))  // Si c'est une redirection (>, >>, <)
-        {
-            node = new_node(RDR, (*cur)->value);  // Créer un nœud pour la redirection
-            *cur = (*cur)->next;  // Passer au token suivant
-            lst_add_child(cmd, node);  // Ajouter la redirection comme enfant de la commande
-        }
-        else
-        {
-            *cur = (*cur)->next;  // Passer au token suivant si ce n'est ni un mot ni une redirection
-        }
-    }
+	left = parse_pipe(cur);
+	if (!left)
+		return (NULL);
+	while (*cur && (*cur)->type == T_AND)
+	{
+		*cur = (*cur)->next;
+		right = parse_pipe(cur);
+		if (!right)
+			return (free_ast(left), NULL);
+		node = new_node(N_AND, left, right, NULL);
+		if (!node)
+			return (free_ast(left), free_ast(right), NULL);
+		left = node;
+	}
+	return (left);
 }
 
-// Fonction pour analyser une commande sans opérateur
-t_node *parse_left(t_token **cur)
+t_node	*parse_pipe(t_token **cur)
 {
-    t_node *node;
+	t_node	*left;
+	t_node	*right;
+	t_node	*node;
 
-    if (!cur || !*cur)
-        return NULL;
-
-    node = new_node(CMD, NULL);  // Créer un nœud de type "CMD" (commande)
-    if (!node)
-        return NULL;
-
-    parse_cmd(node, cur);  // Appel à parse_cmd pour analyser la commande
-    return node;
+	left = parse_cmd(cur);
+	if (!left)
+		return (NULL);
+	while (*cur && (*cur)->type == T_PIPE)
+	{
+		*cur = (*cur)->next;
+		right = parse_cmd(cur);
+		if (!right)
+			return (free_ast(left), NULL);
+		node = new_node(N_PIPE, left, right, NULL);
+		if (!node)
+			return (free_ast(left), free_ast(right), NULL);
+		left = node;
+	}
+	return (left);
 }
 
-// Fonction pour analyser un opérateur et créer un nœud correspondant
-static t_node *parse_operator(t_token **cur)
+static int	is_cmd_token(t_token_type type)
 {
-    t_node *node;
-
-    if (*cur && ft_isoperator((*cur)->type))
-    {
-        node = new_node(OPE, (*cur)->value);  // Créer un nœud pour l'opérateur
-        *cur = (*cur)->next;  // Passer au token suivant
-        return node;
-    }
-    return NULL;
+	if (type == T_WORD)
+		return (1);
+	return (0);
 }
 
-t_node *parse_pipeline(t_token **cur, int min_priority)
+t_node	*parse_cmd(t_token **cur)
 {
-    t_node *left;
-    t_node *operator;
-    t_node *right;
+	t_node	*node;
+	t_node	*redir;
 
-    // Analyser la première commande à gauche
-    left = parse_left(cur);
-    if (!left)
-        return NULL;
+	if (!*cur)
+		return (NULL);
 
-    // Analyser les opérateurs en tenant compte de leur priorité
-    operator = parse_operator(cur);
-    while (operator && get_operator_priority(operator->type) >= min_priority)
-    {
-        // Analyser la commande à droite de l'opérateur
-        right = parse_left(cur);
-        if (!right)
-            return NULL;
+	/* ------------------------- SUBSHELL ( ... ) ------------------------- */
+	if ((*cur)->type == T_PARENT_OPEN)
+	{
+		*cur = (*cur)->next; // consume '('
 
-        // Lier l'opérateur avec ses deux commandes
-        lst_add_child(operator, left);  // Ajouter la commande gauche
-        lst_add_child(operator, right); // Ajouter la commande droite
+		node = parse_or(cur); // parse inside parentheses
+		if (!node)
+			return (NULL);
+		if (!*cur || (*cur)->type != T_PARENT_CLOSE)
+		{
+			free_ast(node);
+			return (NULL);
+		}
+		*cur = (*cur)->next; // consume ')'
 
-        // Mettre à jour `left` pour l'itération suivante
-        left = operator;
+		return new_node(N_SUB, node, NULL, NULL);
+	}
 
-        // Passer à l'opérateur suivant
-        operator = parse_operator(cur);
-    }
+	/* ------------------------- SIMPLE COMMAND ------------------------- */
+	if (is_cmd_token((*cur)->type))
+	{
+		node = new_node(N_CMD, NULL, NULL, (*cur)->value);
+		if (!node)
+			return (NULL);
+		*cur = (*cur)->next;
 
-    return left;  // Retourner le nœud de gauche qui devient un opérateur ou une commande
+		/* ---- parse arguments OR redirections ---- */
+		while (*cur)
+		{
+			/* ------------------------- ARGUMENT ------------------------- */
+			if ((*cur)->type == T_WORD)
+			{
+				// store last argument as node->cmd (upgrade later)
+				free(node->cmd);
+				node->cmd = NULL;
+				*cur = (*cur)->next;
+			}
+			/* ------------------------- REDIRECTIONS --------------------- */
+			else if ((*cur)->type == T_REDIR_IN || (*cur)->type == T_REDIR_OUT
+				|| (*cur)->type == T_APPEND || (*cur)->type == T_HEREDOC)
+			{
+				*cur = (*cur)->next; // consume operator
+
+				if (!*cur || (*cur)->type != T_WORD)
+				{
+					free_ast(node);
+					return (NULL);
+				}
+
+				redir = new_node(N_REDIR_IN, NULL, NULL, NULL);
+				if (!redir)
+					return (free_ast(node), NULL);
+
+				redir->file = ft_strdup((*cur)->value);
+				redir->left = node;   // attach to command
+				node = redir;         // new root of command subtree
+
+				*cur = (*cur)->next;
+			}
+
+			else
+				break;
+		}
+		return node;
+	}
+	return (NULL);
 }
 
 
-// Fonction pour analyser toute l'expression avec gestion des priorités des opérateurs
-t_node *parse(t_token *cur)
+t_node	*parse(t_token *cur)
 {
-    t_node *pipeline;
+	t_node *ast;
 
-    if (!cur)
-        return NULL;
+	if (!cur)
+		return NULL;
 
-    // Analyser avec la priorité minimale (0 ici)
-    pipeline = parse_pipeline(&cur, 0);  // Analyser avec la priorité la plus faible
+	ast = parse_or(&cur); 
 
-    // Retourner l'AST généré
-    return pipeline;
+	if (cur && cur->type != T_END)
+	{
+		fprintf(stderr, "minishell: syntax error near unexpected token `%s'\n",
+				cur->value);
+		free_ast(ast);
+		return NULL;
+	}
+
+	return ast;
 }
