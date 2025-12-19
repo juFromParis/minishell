@@ -1,0 +1,23 @@
+total 140
+drwxr-xr-x  2 vtaniga 2025_paris     25 Dec 12 22:24 inc
+drwxr-xr-x  4 vtaniga 2025_paris     59 Dec 15 15:35 libft
+-rw-r--r--  1 vtaniga 2025_paris   4185 Dec 15 14:05 Makefile
+-rwxr-xr-x  1 vtaniga 2025_paris 114744 Dec 15 15:35 minishell
+drwxr-xr-x  2 vtaniga 2025_paris   4096 Dec 12 22:24 notes pour minishell
+-rw-r--r--  1 vtaniga 2025_paris      0 Dec 15 15:37 ouftile
+drwxr-xr-x  2 vtaniga 2025_paris      6 Dec 12 19:31 Rank_03
+-rw-r--r--  1 vtaniga 2025_paris   1265 Nov 27 10:20 readline.supp
+drwxr-xr-x  3 vtaniga 2025_paris   4096 Dec 12 22:24 sandbox
+drwxr-xr-x 15 vtaniga 2025_paris   4096 Dec 15 15:35 src
+total 148
+drwxr-xr-x  2 vtaniga 2025_paris     25 Dec 12 22:24 inc
+drwxr-xr-x  4 vtaniga 2025_paris     59 Dec 15 15:35 libft
+-rw-r--r--  1 vtaniga 2025_paris   4185 Dec 15 14:05 Makefile
+-rwxr-xr-x  1 vtaniga 2025_paris 114744 Dec 15 15:35 minishell
+drwxr-xr-x  2 vtaniga 2025_paris   4096 Dec 12 22:24 notes pour minishell
+-rw-r--r--  1 vtaniga 2025_paris    632 Dec 15 15:37 ouftile
+drwxr-xr-x  2 vtaniga 2025_paris      6 Dec 12 19:31 Rank_03
+-rw-r--r--  1 vtaniga 2025_paris   1265 Nov 27 10:20 readline.supp
+drwxr-xr-x  3 vtaniga 2025_paris   4096 Dec 12 22:24 sandbox
+drwxr-xr-x 15 vtaniga 2025_paris   4096 Dec 15 15:35 src
+-rw-r--r--  1 vtaniga 2025_paris    690 Dec 15 15:37 test

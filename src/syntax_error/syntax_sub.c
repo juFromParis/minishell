@@ -6,11 +6,12 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 10:02:07 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/15 17:00:38 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/17 13:38:29 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include "../utils/utils.h"
 
 char	**gen_sub_array(t_token *node, int count)
 {
@@ -104,10 +105,10 @@ int	is_error_sub(t_token *node)
 	t_token	*tmp;
 	int		i;
 
-	tmp = node;
-	i = 0;
 	if (!node)
 		return (0);
+	tmp = node;
+	i = 0;
 	while (tmp)
 	{
 		i++;
@@ -117,6 +118,10 @@ int	is_error_sub(t_token *node)
 	if (!array)
 		return (1);
 	if (is_error_between_ope(array))
+	{
+		free_array(array);
 		return (1);
+	}
+	free_array(array);
 	return (0);
 }

@@ -6,42 +6,51 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 21:28:36 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/16 14:21:15 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/17 12:57:15 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+#include "../env/env.h"
 
-void 	sig_init(void)
+void	sig_start(int signum, void (*handler)(int))
 {
-	sig_start(SIGINT, sigint_listener);
-	sig_start(SIGTERM, sigterm_listener);
-	sig_start(SIGQUIT, SIG_IGN);
+	struct sigaction	sig;
+
+	sig.sa_handler = handler;
+	sigemptyset(&sig.sa_mask);
+	sig.sa_flags = SA_RESTART;
+	sigaction(signum, &sig, NULL);
 }
 
-void sig_start(int signum, void (*handler)(int))
+void	sig_start_heredoc(int signum, void (*handler)(int))
 {
-    struct sigaction sig;
+	struct sigaction	sig;
 
-    sig.sa_handler = handler;
-    sigemptyset(&sig.sa_mask);
-    sig.sa_flags = SA_RESTART;
-    sigaction(signum, &sig, NULL);
+	sig.sa_handler = handler;
+	sigemptyset(&sig.sa_mask);
+	sig.sa_flags = 0;
+	sigaction(signum, &sig, NULL);
 }
 
-void	sigint_listener(int sig)
+void	sigint_prompt(int sig)
 {
 	(void)sig;
+	g_exit_status = 130;
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
-void	sigterm_listener(int sig)
+void	sigint_exec(int sig)
 {
 	(void)sig;
-	write(1, "exit\n", 5);
-	rl_clear_history();
-	exit(128 + SIGTERM);
+	g_exit_status = 130;
+	write(1, "\n", 1);
+}
+
+void	sigquit_ignore(int sig)
+{
+	(void)sig;
 }

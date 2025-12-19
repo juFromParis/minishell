@@ -50,6 +50,7 @@ SRC = \
 	src/ft_split.c \
 	src/ft_strchr.c \
 	src/ft_striteri.c \
+	src/ft_append.c \
 	src/ft_strrchr.c \
 	src/ft_strlcat.c \
 	src/ft_strdup.c \

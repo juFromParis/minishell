@@ -6,11 +6,12 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 10:34:19 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/09 12:38:36 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:02:04 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
+#include "../utils/utils.h"
 
 char	**add_arg(char **old_list, int size, char *new_arg)
 {
@@ -35,92 +36,134 @@ char	**add_arg(char **old_list, int size, char *new_arg)
 	return (new_list);
 }
 
-static int	word_count(char const *s)
+// static int	word_count(char const *s)
+// {
+// 	int	i;
+// 	int	count;
+// 	int	is_word;
+
+// 	i = 0;
+// 	count = 0;
+// 	is_word = 0;
+// 	while (s[i])
+// 	{
+// 		if (s[i] != ' ' && is_word == 0)
+// 		{
+// 			count++;
+// 			is_word = 1;
+// 		}
+// 		else if (s[i] == ' ')
+// 			is_word = 0;
+// 		i++;
+// 	}
+// 	return (count);
+// }
+
+// static char	*set_word(char const *s, int start)
+// {
+// 	char	*word;
+// 	int		i;
+// 	int		j;
+// 	int		len;
+
+// 	i = start;
+// 	len = 0;
+// 	while (s[i] && s[i] != ' ')
+// 	{
+// 		len++;
+// 		i++;
+// 	}
+// 	word = malloc(sizeof(char) * (len + 1));
+// 	if (!word)
+// 		return (NULL);
+// 	i = start;
+// 	j = 0;
+// 	while (s[i] && s[i] != ' ')
+// 		word[j++] = s[i++];
+// 	word[j] = '\0';
+// 	return (word);
+// }
+
+// static char	**gen_array(char **array, char const *s)
+// {
+// 	int		i;
+// 	int		level;
+// 	int		new_word;
+// 	char	*word;
+
+// 	i = 0;
+// 	level = 0;
+// 	new_word = 0;
+// 	while (s[i])
+// 	{
+// 		if (s[i] != ' ' && !new_word)
+// 		{
+// 			word = set_word(s, i);
+// 			if (!word)
+// 				return (free_array(array), NULL);
+// 			array[level++] = word;
+// 			new_word = 1;
+// 		}
+// 		else if (s[i] == ' ')
+// 			new_word = 0;
+// 		i++;
+// 	}
+// 	array[level] = NULL;
+// 	return (array);
+// }
+
+// char	**split_for_arg(char const *s)
+// {
+// 	char	**array;
+// 	int		count;
+
+// 	if (!s)
+// 		return (NULL);
+// 	count = word_count(s);
+// 	array = malloc(sizeof(char *) * (count + 1));
+// 	if (!array)
+// 		return (NULL);
+// 	return (gen_array(array, s));
+// }
+
+char **split_for_arg(const char *s)
 {
-	int	i;
-	int	count;
-	int	is_word;
+    char    **args;
+    char    buffer[4096];
+    int     i = 0, j = 0, k = 0;
+    int     quote = 0;
 
-	i = 0;
-	count = 0;
-	is_word = 0;
-	while (s[i])
-	{
-		if (s[i] != ' ' && is_word == 0)
-		{
-			count++;
-			is_word = 1;
-		}
-		else if (s[i] == ' ')
-			is_word = 0;
-		i++;
-	}
-	return (count);
-}
+    args = malloc(sizeof(char *) * (ft_strlen(s) + 1));
+    if (!args)
+        return NULL;
 
-static char	*set_word(char const *s, int start)
-{
-	char	*word;
-	int		i;
-	int		j;
-	int		len;
+    while (s[i])
+    {
+        while (s[i] == ' ')
+            i++;
+        if (!s[i])
+            break;
 
-	i = start;
-	len = 0;
-	while (s[i] && s[i] != ' ')
-	{
-		len++;
-		i++;
-	}
-	word = malloc(sizeof(char) * (len + 1));
-	if (!word)
-		return (NULL);
-	i = start;
-	j = 0;
-	while (s[i] && s[i] != ' ')
-		word[j++] = s[i++];
-	word[j] = '\0';
-	return (word);
-}
-
-static char	**gen_array(char **array, char const *s)
-{
-	int		i;
-	int		level;
-	int		new_word;
-	char	*word;
-
-	i = 0;
-	level = 0;
-	new_word = 0;
-	while (s[i])
-	{
-		if (s[i] != ' ' && !new_word)
-		{
-			word = set_word(s, i);
-			if (!word)
-				return (free_array(array), NULL);
-			array[level++] = word;
-			new_word = 1;
-		}
-		else if (s[i] == ' ')
-			new_word = 0;
-		i++;
-	}
-	array[level] = NULL;
-	return (array);
-}
-
-char	**split_for_arg(char const *s)
-{
-	char	**array;
-	int		count;
-
-	if (!s)
-		return (NULL);
-	count = word_count(s);
-	array = malloc(sizeof(char *) * (count + 1));
-	if (!array)
-		return (NULL);
-	return (gen_array(array, s));
+        k = 0;
+        quote = 0;
+        while (s[i])
+        {
+            if ((s[i] == '"' || s[i] == '\''))
+            {
+                if (!quote)
+                    quote = s[i];
+                else if (quote == s[i])
+                    quote = 0;
+                i++;
+                continue;
+            }
+            if (s[i] == ' ' && !quote)
+                break;
+            buffer[k++] = s[i++];
+        }
+        buffer[k] = '\0';
+        args[j++] = ft_strdup(buffer);
+    }
+    args[j] = NULL;
+    return args;
 }

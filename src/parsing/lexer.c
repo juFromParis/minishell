@@ -6,11 +6,12 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 20:16:51 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 18:52:44 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/17 11:45:06 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h" 
+#include "../../inc/minishell.h"
+#include "../utils/utils.h"
 
 t_token	*check_operator(char *str, int *i)
 {
@@ -80,6 +81,6 @@ t_token	*lexer(char *str)
 		}
 	}
 	token_add_back(&token_list, new_token(T_END, NULL));
-	free(str);
+	//free(str);
 	return (token_list);
 }

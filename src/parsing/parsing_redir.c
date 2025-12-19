@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 11:35:42 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/15 15:23:22 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:02:34 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,58 +46,113 @@ int	count_tokens(const char *s)
 	return (count);
 }
 
-static char	*extract_operator(const char *s, int *i)
+// static char	*extract_operator(const char *s, int *i)
+// {
+// 	char	*op;
+
+// 	if (s[*i + 1] == s[*i])
+// 	{
+// 		op = ft_strncpy(s, *i, 2);
+// 		*i += 2;
+// 	}
+// 	else
+// 	{
+// 		op = ft_strncpy(s, *i, 1);
+// 		*i += 1;
+// 	}
+// 	return (op);
+// }
+
+// static char	*extract_word(const char *s, int *i)
+// {
+// 	int	start;
+
+// 	start = *i;
+// 	while (s[*i] && !ft_isspace(s[*i]) && !is_operator_char(s[*i]))
+// 		(*i)++;
+// 	return (ft_strncpy(s, start, *i - start));
+// }
+
+// char **split_for_redir(const char *s)
+// {
+//     char    **args;
+//     char    buffer[4096];
+//     int     i = 0, j = 0, k;
+//     char    quote = 0;
+
+//     args = malloc(sizeof(char *) * (ft_strlen(s) + 1));
+//     if (!args)
+//         return NULL;
+
+//     while (s[i])
+//     {
+//         while (s[i] == ' ')
+//             i++;
+//         if (!s[i])
+//             break;
+
+//         k = 0;
+//         quote = 0;
+//         while (s[i])
+//         {
+//             if ((s[i] == '"' || s[i] == '\''))
+//             {
+//                 if (!quote)
+//                     quote = s[i];
+//                 else if (quote == s[i])
+//                     quote = 0;
+//                 i++;
+//                 continue;
+//             }
+//             if (s[i] == ' ' && !quote)
+//                 break;
+//             buffer[k++] = s[i++];
+//         }
+//         buffer[k] = '\0';
+//         args[j++] = ft_strdup(buffer);
+//     }
+//     args[j] = NULL;
+//     return args;
+// }
+
+char **split_for_redir(const char *s)
 {
-	char	*op;
+    char    **args;
+    char    buffer[4096];
+    int     i = 0, j = 0, k;
+    char    quote = 0;
 
-	if (s[*i + 1] == s[*i])
-	{
-		op = ft_strncpy(s, *i, 2);
-		*i += 2;
-	}
-	else
-	{
-		op = ft_strncpy(s, *i, 1);
-		*i += 1;
-	}
-	return (op);
-}
+    args = malloc(sizeof(char *) * (ft_strlen(s) + 1));
+    if (!args)
+        return NULL;
 
-static char	*extract_word(const char *s, int *i)
-{
-	int	start;
+    while (s[i])
+    {
+        while (s[i] == ' ')
+            i++;
+        if (!s[i])
+            break;
 
-	start = *i;
-	while (s[*i] && !ft_isspace(s[*i]) && !is_operator_char(s[*i]))
-		(*i)++;
-	return (ft_strncpy(s, start, *i - start));
-}
-
-char	**split_for_redir(const char *s)
-{
-	char	**array;
-	int		i;
-	int		k;
-
-	i = 0;
-	k = 0;
-	if (!s)
-		return (NULL);
-	array = malloc(sizeof(char *) * (count_tokens(s) + 1));
-	if (!array)
-		return (NULL);
-	while (s[i])
-	{
-		if (ft_isspace(s[i]))
-		{
-			i++;
-			continue ;
-		}
-		if (is_operator_char(s[i]))
-			array[k++] = extract_operator(s, &i);
-		else
-			array[k++] = extract_word(s, &i);
-	}
-	array[k] = NULL;
-	return (array);
+        k = 0;
+        quote = 0;
+        while (s[i])
+        {
+            if ((s[i] == '"' || s[i] == '\''))
+            {
+                if (!quote)
+                    quote = s[i];
+                else if (quote == s[i])
+                    quote = 0;
+                i++;
+                continue;
+            }
+            if (s[i] == ' ' && !quote)
+                break;
+            buffer[k++] = s[i++];
+        }
+        buffer[k] = '\0';
+        args[j++] = ft_strdup(buffer);
+    }
+    args[j] = NULL;
+    return args;
 }

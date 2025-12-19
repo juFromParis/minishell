@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 09:46:29 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/10 10:25:18 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/16 15:15:36 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	is_error_type(t_token *node)
 {
+	(void)node;
 	if (ft_isoperator(node->type))
 		if (is_error_ope(node))
 			return (1);

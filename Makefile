@@ -13,6 +13,7 @@
 # Program name
 NAME = minishell
 
+
 # Compiler and flags
 CC     = cc
 CFLAGS = -Wall -Wextra -Werror -g
@@ -53,6 +54,13 @@ INCLUDES = -I./inc $(LIBFT_INC) $(READLINE_INC)
 
 # Sources
 SRCS = \
+	src/env/env1.c src/env/env2.c src/env/env3.c src/exec/exec_ast1.c src/exec/exec_ast2.c \
+	src/exec/exec_command.c src/exec/exec_pipe.c src/exec/exec_redir_out.c src/exec/exec_redir_in.c\
+	src/exec/exec_redir_append.c src/exec/exec_redir_heredocument1.c src/exec/exec_redir_heredocument2.c\
+	src/builtins/builtin_cd.c src/builtins/builtin_pwd.c src/builtins/builtin_echo.c src/builtins/builtin_env.c src/builtins/exec_builtins1.c\
+	src/utils/utils1.c src/utils/utils2.c src/utils/utils3.c src/utils/utils4.c \
+	src/expansion/wildcard1.c src/expansion/wildcard2.c src/expansion/wildcard3.c src/expansion/wildcard4.c \
+	src/expansion/variable.c\
 	src/main.c \
 	src/parsing/ischeck.c \
 	src/parsing/lexer.c \
@@ -95,13 +103,13 @@ $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT_LIB) $(READLINE_LIB) -o $(NAME)
 	@echo "$(CYAN)✓ $(NAME) compiled successfully!$(RESET)"
 	@echo "$(CYAN)  __  __ _       _   _____ _          _ _ "
-	@echo "$(CYAN) |  \/  (_)     (_) / ____| |        | | |"
-	@echo "$(CYAN) | \  / |_ _ __  _ | (___ | |__   ___| | |"
-	@echo "$(CYAN) | |\/| | | '_ \| | \___ \| '_ \ / _ \ | |"
-	@echo "$(CYAN) | |  | | | | | | |_____) | | | |  __/ | |"
-	@echo "$(CYAN) |_|  |_|_|_| |_|_|______/|_| |_|\___|_|_|"
+	@echo "$(CYAN) |..\/..(.)     (.) / ____|.|        |.| |"
+	@echo "$(CYAN) |.\../.|_ _ __  _ | (___ |.|__   ___|.| |"
+	@echo "$(CYAN) |.|\/|.|.| '_ \|.| \___ \|.'. \ / _ \.| |"
+	@echo "$(CYAN) |.|  |.|.| | | |.|_____) |.| |.|  __/.| |"
+	@echo "$(CYAN) |.|  |.|.|_| |_|._______/|.| |.|\___|.|_|"
 	@echo "$(RESET)"
-	@echo "$(BLINK)$(GREEN)✓ $(NAME) ready to start..$(RESET)$(NOBLINK)"
+	@echo "$(BLINK)$(GREEN)✓ $(NAME) ready to start..$(RESET)"
 
 # Compile each .c file into a .o file
 %.o: %.c
