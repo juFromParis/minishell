@@ -1,33 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/05/16 12:14:06 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 18:31:37 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/libft.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+void	ft_putnbr_fd(int n, int fd)
 {
-	t_node	*node;
+	int	c;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	if (n == -2147483648)
+	{
+		write(fd, "-2147483648", 11);
+	}
+	else if (n < 0)
+	{
+		n = -n;
+		write(fd, "-", 1);
+		ft_putnbr_fd(n, fd);
+	}
+	else if (n >= 10)
+	{
+		ft_putnbr_fd(n / 10, fd);
+		ft_putnbr_fd(n % 10, fd);
+	}
+	else
+	{
+		c = n + '0';
+		write(fd, &c, 1);
+	}
 }
+/*
+int	main(void)
+{
+	ft_putnbr_fd(-2147483648, 1);
+	return (0);
+}
+*/

@@ -1,33 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/04/30 11:34:24 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 18:30:04 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/libft.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+int	ft_isdigit(int c)
 {
-	t_node	*node;
-
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }
+/*
+int main(void)
+{
+    printf("%d\n", ft_isdigit('J'));
+    printf("%d\n", ft_isdigit('2'));
+    return 0;
+}
+*/

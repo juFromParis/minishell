@@ -1,33 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/05/07 11:16:40 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 18:31:09 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/libft.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+int	ft_memcmp(void *ptr1, void *ptr2, size_t size)
 {
-	t_node	*node;
+	unsigned char	*temp1;
+	unsigned char	*temp2;
+	size_t			i;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	temp1 = (unsigned char *)ptr1;
+	temp2 = (unsigned char *)ptr2;
+	i = 0;
+	while (i < size)
+	{
+		if (temp1[i] != temp2[i])
+			return (temp1[i] - temp2[i]);
+		i++;
+	}
+	return (0);
 }
+/*
+int	main(void)
+{
+	printf("%d\n", ft_memcmp("abc", "abd", 3));
+	return 0;
+}
+*/

@@ -1,33 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/05/07 10:29:22 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 18:32:14 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/libft.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+int	ft_strncmp(char *str1, char *str2, size_t len)
 {
-	t_node	*node;
+	size_t	i;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	i = 0;
+	while (i < len && (str1[i] || str2[i]))
+	{
+		if (str1[i] != str2[i])
+			return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+		i++;
+	}
+	return (0);
 }
+/*
+int	main(void)
+{
+	printf("%d\n", ft_strncmp("abc", "abd", 2));
+	printf("%d\n", ft_strncmp("abc", "abd", 3));
+	return 0;
+}
+*/

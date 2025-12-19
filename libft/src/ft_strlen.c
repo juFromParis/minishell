@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/04/30 10:48:40 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 18:32:08 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/libft.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+int	ft_strlen(const char *str)
 {
-	t_node	*node;
+	int	i;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
 }
+/*
+int main(void)
+i{
+	const char *s = "Test de chaine de 31 caracteres";
+	printf("%d", ft_strlen(s));
+	return 0;
+}
+*/

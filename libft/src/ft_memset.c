@@ -1,33 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/05/06 14:39:01 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 18:31:17 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/libft.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	t_node	*node;
+	unsigned char	*temp;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	temp = (unsigned char *)b;
+	while (len > 0)
+	{
+		*temp = (unsigned char)c;
+		temp++;
+		len--;
+	}
+	return (b);
 }
+/*
+int	main(void)
+{
+	char str[14] = "Ma chaine test";
+	ft_memset(str, '*', 6);
+	printf("%s\n", str);
+	return 0;
+}
+*/

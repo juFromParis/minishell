@@ -1,33 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/12/12 16:01:37 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 21:06:07 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+t_heredoc	*heredoc_new(char *delimiter)
 {
-	t_node	*node;
+	t_heredoc	*new;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
+	new = malloc(sizeof(t_heredoc));
+	if (!new)
 		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	new->delimiter = ft_strdup(delimiter);
+	new->content = NULL;
+	new->next = NULL;
+	return (new);
+}
+
+void	heredoc_add_back(t_heredoc **list, t_heredoc *new)
+{
+	t_heredoc	*tmp;
+
+	if (!*list)
+	{
+		*list = new;
+		return ;
+	}
+	tmp = *list;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
 }

@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 20:16:51 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/03 18:57:16 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/12 18:52:44 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,7 @@
 
 t_token	*check_operator(char *str, int *i)
 {
-	if (str[*i] == '<' && str[*i + 1] == '<')
-		return ((*i) = (*i) + 2, new_token(T_HEREDOC, ft_strdup("<<")));
-	else if (str[*i] == '<')
-		return ((*i)++, new_token(T_REDIR_IN, ft_strdup("<")));
-	else if (str[*i] == '>' && str[*i + 1] == '>')
-		return ((*i) = (*i) + 2, new_token(T_APPEND, ft_strdup(">>")));
-	else if (str[*i] == '>')
-		return ((*i)++, new_token(T_REDIR_OUT, ft_strdup(">")));
-	else if (str[*i] == '&' && str[*i + 1] == '&')
+	if (str[*i] == '&' && str[*i + 1] == '&')
 		return ((*i) = (*i) + 2, new_token(T_AND, ft_strdup("&&")));
 	else if (str[*i] == '|' && str[*i + 1] == '|')
 		return ((*i) = (*i) + 2, new_token(T_OR, ft_strdup("||")));
@@ -43,9 +35,7 @@ t_token	*check_word(char *str, int *i)
 	char	quote;
 
 	start = *i;
-	while (str[*i]
-		&& !ft_isspace(str[*i])
-		&& !ft_issign(str[*i]))
+	while (str[*i] && !ft_issign(str[*i]))
 	{
 		if (str[*i] == '"' || str[*i] == '\'')
 		{
@@ -60,31 +50,11 @@ t_token	*check_word(char *str, int *i)
 			(*i)++;
 	}
 	len = *i - start;
+	if (ft_strcmp(&str[*i - 1], " ") == 0)
+		len--;
 	word_str = ft_strndup(str + start, len);
-	return (new_token(T_WORD, word_str));
+	return (new_token(T_CMD, word_str));
 }
-
-/*
-t_token_type	lex_builtin(char *value)
-{
-	if (ft_strcmp(value, "echo") == 0)
-		return (T_ECHO);
-	else if (ft_strcmp(value, "cd") == 0)
-		return (T_CD);
-	else if (ft_strcmp(value, "pwd") == 0)
-		return (T_PWD);
-	else if (ft_strcmp(value, "export") == 0)
-		return (T_EXPORT);
-	else if (ft_strcmp(value, "unset") == 0)
-		return (T_UNSET);
-	else if (ft_strcmp(value, "env") == 0)
-		return (T_ENV);
-	else if (ft_strcmp(value, "exit") == 0)
-		return (T_EXIT);
-	else
-		return (T_WORD);
-}
-*/
 
 t_token	*lexer(char *str)
 {

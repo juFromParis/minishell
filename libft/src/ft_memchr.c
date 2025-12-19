@@ -1,33 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/05/07 10:57:41 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 18:31:05 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/libft.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+void	*ft_memchr(void *memoryBlock, int searchedChar, size_t size)
 {
-	t_node	*node;
+	unsigned char	*temp;
+	size_t			i;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	temp = (unsigned char *)memoryBlock;
+	i = 0;
+	while (i < size)
+	{
+		if (temp[i] == (unsigned char)searchedChar)
+			return (temp + i);
+		i++;
+	}
+	return (0);
 }
+/*
+int main(void)
+{
+	char str[] = "abcdefghijkl";
+	printf("%s\n", (char *)ft_memchr(str, 'd', 6));
+	return 0;
+}
+*/

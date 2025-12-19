@@ -1,33 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/12/12 18:17:26 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 19:02:44 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/libft.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+char	*ft_strndup(const char *s, size_t n)
 {
-	t_node	*node;
+	size_t	len;
+	size_t	i;
+	char	*dup;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
+	len = 0;
+	i = 0;
+	while (s[len] && len < n)
+		len++;
+	dup = malloc(len + 1);
+	if (!dup)
 		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	while (i < len)
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[len] = '\0';
+	return (dup);
 }

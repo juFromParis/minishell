@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 11:59:06 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/03 18:55:10 by jderachi         ###   ########.fr       */
+/*   Updated: 2025/12/12 19:06:37 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 int	ft_issign(char c)
 {
 	if (c == '|'
-		|| c == '<'
-		|| c == '>'
 		|| c == '&'
 		|| c == '('
 		|| c == ')')
@@ -33,35 +31,19 @@ int	ft_isoperator(t_token_type type)
 
 int	ft_isredir(char *str)
 {
+	int	i;
+
+	i = 0;
 	if (!str)
 		return (0);
-	if (ft_strcmp(str, ">") == 0
-		|| ft_strcmp(str, "<") == 0
-		|| ft_strcmp(str, ">>") == 0
-		|| ft_strcmp(str, "<<") == 0)
-		return (1);
-	return (0);
-}
-
-/*
-int	ft_isbuiltin(t_token_type type)
-{
-	if (type == T_FCT
-		|| type == T_ECHO
-		|| type == T_CD
-		|| type == T_PWD
-		|| type == T_EXPORT
-		|| type == T_UNSET
-		|| type == T_ENV
-		|| type == T_EXIT)
-		return (1);
-	return (0);
-}
-*/
-
-int	ft_isspace(char c)
-{
-	if (c == ' ')
-		return (1);
+	while (str[i])
+	{
+		if (ft_strcmp(&str[i], ">") == 0
+			|| ft_strcmp(&str[i], "<") == 0
+			|| ft_strcmp(&str[i], "<<") == 0
+			|| ft_strcmp(&str[i], ">>") == 0)
+			return (1);
+		i++;
+	}
 	return (0);
 }

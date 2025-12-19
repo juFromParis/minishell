@@ -1,33 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                             :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 16:47:28 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/12 21:47:56 by jderachi         ###   ########.fr       */
+/*   Created: 2025/05/06 15:33:28 by jderachi          #+#    #+#             */
+/*   Updated: 2025/12/12 18:31:12 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/libft.h"
 
-t_node	*new_node(t_node_type type, t_node *left, t_node *right)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	t_node	*node;
+	unsigned char		*dest_t;
+	const unsigned char	*src_t;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
+	if ((dest == NULL && src == NULL) && n > 0)
 		return (NULL);
-	node->type = type;
-	node->parent = NULL;
-	node->left = left;
-	node->right = right;
-	node->redir = NULL;
-	node->file = NULL;
-	node->heredocs = NULL;
-	node->heredoc = NULL;
-	node->cmd = NULL;
-	node->cmd2 = NULL;
-	return (node);
+	dest_t = (unsigned char *)dest;
+	src_t = (const unsigned char *)src;
+	while (n > 0)
+	{
+		*dest_t++ = *src_t++;
+		n--;
+	}
+	return (dest);
 }
+/*
+int	main(void)
+{
+	char dest[10];
+	printf("%s\n", (char *)ft_memcpy(dest, "12345", 6));
+	return 0;
+}
+*/
