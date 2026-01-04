@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 21:28:36 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/17 12:57:15 by jderachi         ###   ########.fr       */
+/*   Updated: 2026/01/04 10:35:07 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@ void	sig_start(int signum, void (*handler)(int))
 	sigaction(signum, &sig, NULL);
 }
 
-void	sig_start_heredoc(int signum, void (*handler)(int))
+void	sigint_heredoc(int sig)
 {
-	struct sigaction	sig;
-
-	sig.sa_handler = handler;
-	sigemptyset(&sig.sa_mask);
-	sig.sa_flags = 0;
-	sigaction(signum, &sig, NULL);
+	(void)sig;
+	g_exit_status = 130;
+	g_heredoc_interrupted = 1;
+	write(1, "\n", 1);
+	rl_done = 1;
 }
+
 
 void	sigint_prompt(int sig)
 {

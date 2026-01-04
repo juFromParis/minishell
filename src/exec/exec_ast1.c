@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_ast1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vtaniga <vtaniga@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 18:41:27 by vtaniga           #+#    #+#             */
-/*   Updated: 2025/12/15 11:57:01 by vtaniga          ###   ########.fr       */
+/*   Updated: 2026/01/04 13:43:38 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,9 @@ int	execute_ast(t_node *node, t_env *env)
 	char	*content;
 
 	content = NULL;
+	(void)content;
 	if (!node || !env)
-		return (perror("Invalid arguments to execute_ast"), -1);
+		return (0);
 	if (node->redir && ft_strncmp(node->redir, ">", 2) == 0)
 		return (execute_redir_out_node(node, env));
 	if (node->redir && ft_strncmp(node->redir, "<", 2) == 0)

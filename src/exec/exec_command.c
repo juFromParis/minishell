@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vtaniga <vtaniga@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 09:54:27 by vtaniga           #+#    #+#             */
-/*   Updated: 2025/12/16 16:16:57 by vtaniga          ###   ########.fr       */
+/*   Updated: 2026/01/04 12:28:36 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,33 @@ int	execute_command_node(t_node *node, t_env *env)
 	path = NULL;
 	if (!node || !env)
 		return (perror("execute_command_node: Invalid arguments\n"), -1);
-	printf("cmd1 = %s\n", node->cmd[0]);
-	if ((node->cmd && is_builtin_command(node->cmd[0])) || (node->cmd2 && is_builtin_command(node->cmd2[0])))
+	//printf("cmd1 = %s\n", node->cmd[0]);
+	// if ((node->cmd && is_builtin_command(node->cmd[0])) || (node->cmd2 && is_builtin_command(node->cmd2[0])))
+	// {
+	// 	return (execute_builtin_command(node, env));
+	// }
+
+	if ((node->cmd && is_builtin_command(node->cmd[0])) ||
+    (node->cmd2 && is_builtin_command(node->cmd2[0])))
 	{
-		return (execute_builtin_command(node, env));
+		int saved_stdin;
+		int saved_stdout;
+		int ret;
+
+		saved_stdin = dup(0);
+		saved_stdout = dup(1);
+
+		ret = execute_builtin_command(node, env);
+
+		dup2(saved_stdin, 0);
+		dup2(saved_stdout, 1);
+		close(saved_stdin);
+		close(saved_stdout);
+
+		return (ret);
 	}
+
+
 	path = resolve_path(node->cmd[0], env);
 	if (!path)
 	{

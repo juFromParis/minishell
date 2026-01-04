@@ -6,7 +6,7 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 15:09:42 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/17 16:14:21 by jderachi         ###   ########.fr       */
+/*   Updated: 2026/01/04 10:19:42 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	builtin_env(t_env *env)
 	int	i;
 
 	i = 1;
+    (void)i;
 	while (env)
     {
         printf("%s=%s\n", env->variable, env->value);

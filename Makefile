@@ -77,6 +77,7 @@ SRCS = \
 	src/syntax_error/syntax_redir.c \
 	src/syntax_error/syntax_sub.c \
 	src/heredoc_init/heredoc_init.c \
+	src/heredoc_init/heredoc_utils.c \
 	src/signals/listeners.c \
 	src/for_tests_to_delete/tests.c \
 	src/exit.c

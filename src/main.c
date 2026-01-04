@@ -6,39 +6,53 @@
 /*   By: jderachi <jderachi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 10:09:21 by jderachi          #+#    #+#             */
-/*   Updated: 2025/12/17 16:04:24 by jderachi         ###   ########.fr       */
+/*   Updated: 2026/01/04 13:42:27 by jderachi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 #include "./env/env.h"
 #include "./exec/exec.h"
+#include <unistd.h>
 
 volatile sig_atomic_t	g_heredoc_interrupted = 0;
 volatile int			g_exit_status = 0;
+
+static char	*ms_readline(t_env *envp)
+{
+	if (isatty(STDIN_FILENO))
+		return (readline(get_env_value(envp, "PROMPT")));
+	return (readline("")); /* pas de prompt en non-interactif */
+}
 
 static char	*start_shell(char *input, t_env *envp)
 {
 	t_token	*token;
 	t_node	*ast;
 
-	if (*input)
+	if (!input)
+		return (NULL);
+	if (*input && isatty(STDIN_FILENO))
 		add_history(input);
 	token = lexer(input);
 	is_syntax_error(token);
-	//print_lexer(token);
 	ast = parse(token);
 	free_lexer(&token);
+	if (!ast)
+	{
+		sig_start(SIGINT, sigint_prompt);
+		free(input);
+		return (readline(get_env_value(envp, "PROMPT")));
+	}
 	if (!heredoc_init(ast))
 	{
 		sig_start(SIGINT, sigint_exec);
 		execute_ast(ast, envp);
 	}
-	//print_tree(ast);
 	free_ast(ast);
 	sig_start(SIGINT, sigint_prompt);
 	free(input);
-	return (readline(get_env_value(envp, "PROMPT")));
+	return (ms_readline(envp));
 }
 
 int	main(int argc, char **argv, char **envp_raw)
@@ -53,10 +67,11 @@ int	main(int argc, char **argv, char **envp_raw)
 		return (1);
 	sig_start(SIGINT, sigint_prompt);
 	sig_start(SIGQUIT, sigquit_ignore);
-	input = readline(get_env_value(envp, "PROMPT"));
+	input = ms_readline(envp);
 	while (input)
 		input = start_shell(input, envp);
-	write(1, "exit\n", 5);
+	if (isatty(STDIN_FILENO))
+		write(1, "exit\n", 5);
 	free_env(envp);
 	return (g_exit_status);
 }
